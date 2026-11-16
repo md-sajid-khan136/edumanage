@@ -1,4 +1,5 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
 import Sidebar from './components/Sidebar'
@@ -22,12 +23,45 @@ import StudentGrades from './pages/student/StudentGrades'
 import StudentAttendance from './pages/student/StudentAttendance'
 
 function Layout({ children }) {
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const location = useLocation()
+
+  // Tapping a link on mobile should navigate AND close the drawer,
+  // otherwise the menu stays over the page you just opened.
+  useEffect(() => { setSidebarOpen(false) }, [location.pathname])
+
   return (
     <div className="flex h-screen bg-gray-950">
-      <Sidebar />
-      <main className="flex-1 overflow-y-auto">
-        {children}
-      </main>
+      {/* Dimmed backdrop, mobile only. Tapping it closes the drawer. */}
+      {sidebarOpen && (
+        <div
+          onClick={() => setSidebarOpen(false)}
+          className="fixed inset-0 bg-black/60 z-40 lg:hidden"
+          aria-hidden="true"
+        />
+      )}
+
+      <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+
+      {/* min-w-0 stops wide tables from forcing this column wider than the screen */}
+      <div className="flex-1 flex flex-col min-w-0">
+        <header className="lg:hidden flex items-center gap-3 h-14 px-4 shrink-0 bg-gray-900 border-b border-gray-800">
+          <button
+            onClick={() => setSidebarOpen(true)}
+            aria-label="Open menu"
+            className="text-gray-400 hover:text-white p-1 -ml-1"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+          <span className="text-white font-semibold">EduManage</span>
+        </header>
+
+        <main className="flex-1 overflow-y-auto">
+          {children}
+        </main>
+      </div>
     </div>
   )
 }
