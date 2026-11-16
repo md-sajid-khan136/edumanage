@@ -8,6 +8,7 @@ import Login from './pages/Login'
 import AdminDashboard from './pages/admin/AdminDashboard'
 import Students from './pages/admin/Students'
 import Teachers from './pages/admin/Teachers'
+import Assignments from './pages/admin/Assignments'
 import AdminGrades from './pages/admin/AdminGrades'
 import AdminAttendance from './pages/admin/AdminAttendance'
 
@@ -31,6 +32,15 @@ function Layout({ children }) {
   )
 }
 
+/** Wraps a page in the sidebar layout and locks it to the given roles. */
+function Guarded({ roles, children }) {
+  return (
+    <ProtectedRoute allowedRoles={roles}>
+      <Layout>{children}</Layout>
+    </ProtectedRoute>
+  )
+}
+
 export default function App() {
   return (
     <AuthProvider>
@@ -38,73 +48,26 @@ export default function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
 
-          {/* Admin Routes */}
-          <Route path="/admin" element={
-            <ProtectedRoute allowedRoles={['admin']}>
-              <Layout><AdminDashboard /></Layout>
-            </ProtectedRoute>
-          } />
-          <Route path="/admin/students" element={
-            <ProtectedRoute allowedRoles={['admin']}>
-              <Layout><Students /></Layout>
-            </ProtectedRoute>
-          } />
-          <Route path="/admin/teachers" element={
-            <ProtectedRoute allowedRoles={['admin']}>
-              <Layout><Teachers /></Layout>
-            </ProtectedRoute>
-          } />
-          <Route path="/admin/grades" element={
-            <ProtectedRoute allowedRoles={['admin']}>
-              <Layout><AdminGrades /></Layout>
-            </ProtectedRoute>
-          } />
-          <Route path="/admin/attendance" element={
-            <ProtectedRoute allowedRoles={['admin']}>
-              <Layout><AdminAttendance /></Layout>
-            </ProtectedRoute>
-          } />
+          {/* Admin */}
+          <Route path="/admin" element={<Guarded roles={['admin']}><AdminDashboard /></Guarded>} />
+          <Route path="/admin/students" element={<Guarded roles={['admin']}><Students /></Guarded>} />
+          <Route path="/admin/teachers" element={<Guarded roles={['admin']}><Teachers /></Guarded>} />
+          <Route path="/admin/assignments" element={<Guarded roles={['admin']}><Assignments /></Guarded>} />
+          <Route path="/admin/grades" element={<Guarded roles={['admin']}><AdminGrades /></Guarded>} />
+          <Route path="/admin/attendance" element={<Guarded roles={['admin']}><AdminAttendance /></Guarded>} />
 
-          {/* Teacher Routes */}
-          <Route path="/teacher" element={
-            <ProtectedRoute allowedRoles={['teacher']}>
-              <Layout><TeacherDashboard /></Layout>
-            </ProtectedRoute>
-          } />
-          <Route path="/teacher/students" element={
-            <ProtectedRoute allowedRoles={['teacher']}>
-              <Layout><TeacherStudents /></Layout>
-            </ProtectedRoute>
-          } />
-          <Route path="/teacher/grades" element={
-            <ProtectedRoute allowedRoles={['teacher']}>
-              <Layout><TeacherGrades /></Layout>
-            </ProtectedRoute>
-          } />
-          <Route path="/teacher/attendance" element={
-            <ProtectedRoute allowedRoles={['teacher']}>
-              <Layout><TeacherAttendance /></Layout>
-            </ProtectedRoute>
-          } />
+          {/* Teacher */}
+          <Route path="/teacher" element={<Guarded roles={['teacher']}><TeacherDashboard /></Guarded>} />
+          <Route path="/teacher/students" element={<Guarded roles={['teacher']}><TeacherStudents /></Guarded>} />
+          <Route path="/teacher/grades" element={<Guarded roles={['teacher']}><TeacherGrades /></Guarded>} />
+          <Route path="/teacher/attendance" element={<Guarded roles={['teacher']}><TeacherAttendance /></Guarded>} />
 
-          {/* Student Routes */}
-          <Route path="/student" element={
-            <ProtectedRoute allowedRoles={['student']}>
-              <Layout><StudentDashboard /></Layout>
-            </ProtectedRoute>
-          } />
-          <Route path="/student/grades" element={
-            <ProtectedRoute allowedRoles={['student']}>
-              <Layout><StudentGrades /></Layout>
-            </ProtectedRoute>
-          } />
-          <Route path="/student/attendance" element={
-            <ProtectedRoute allowedRoles={['student']}>
-              <Layout><StudentAttendance /></Layout>
-            </ProtectedRoute>
-          } />
+          {/* Student */}
+          <Route path="/student" element={<Guarded roles={['student']}><StudentDashboard /></Guarded>} />
+          <Route path="/student/grades" element={<Guarded roles={['student']}><StudentGrades /></Guarded>} />
+          <Route path="/student/attendance" element={<Guarded roles={['student']}><StudentAttendance /></Guarded>} />
 
-          {/* Default redirect */}
+          {/* Fallbacks */}
           <Route path="/" element={<Navigate to="/login" replace />} />
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>

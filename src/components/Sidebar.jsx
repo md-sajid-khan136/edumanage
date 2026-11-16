@@ -5,13 +5,14 @@ const adminLinks = [
   { to: '/admin', label: 'Dashboard', icon: '📊', end: true },
   { to: '/admin/students', label: 'Students', icon: '🎓' },
   { to: '/admin/teachers', label: 'Teachers', icon: '👩‍🏫' },
+  { to: '/admin/assignments', label: 'Assignments', icon: '🔗' },
   { to: '/admin/grades', label: 'Grades', icon: '📝' },
   { to: '/admin/attendance', label: 'Attendance', icon: '📅' },
 ]
 
 const teacherLinks = [
   { to: '/teacher', label: 'Dashboard', icon: '📊', end: true },
-  { to: '/teacher/students', label: 'Students', icon: '🎓' },
+  { to: '/teacher/students', label: 'My Students', icon: '🎓' },
   { to: '/teacher/grades', label: 'Grades', icon: '📝' },
   { to: '/teacher/attendance', label: 'Attendance', icon: '📅' },
 ]
